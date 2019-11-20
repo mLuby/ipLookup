@@ -12,9 +12,15 @@ async function ipLookup (req, res) {
   const visit = req.body
   const ip = req.ip
   const ips = req.ips
-  const alpha3CountryCode = (await ipToA3CC(ip)) || "Not Found"
-  console.log({ip, ips, alpha3CountryCode})
-  return res.status(200).json({ip, alpha3CountryCode})
+  try {
+    const alpha3CountryCode = (await ipToA3CC(ip)) || "Not Found"
+    console.log({ip, ips, alpha3CountryCode})
+    return res.status(200).json({ip, alpha3CountryCode})
+  } catch (ipLookupError) {
+    console.error(ipLookupError)
+    console.error(JSON.stringify(ipLookupError, 0, 2))
+    return res.status(500).json({ipLookupError})
+  }
 }
 
 const dbParams = parseUrl(process.env.DATABASE_URL || "postgres://$USER:@localhost:5432/moonpay")
