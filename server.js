@@ -6,6 +6,8 @@ const server = express()
 const PORT = process.env.PORT || 3000
 let pool = null
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0" // Avoids DEPTH_ZERO_SELF_SIGNED_CERT error for self-signed certs
+
 server.get("/", ipLookup)
 
 async function ipLookup (req, res) {
